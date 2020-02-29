@@ -28,6 +28,11 @@ public class ConfirmarDatos extends AppCompatActivity {
         TextView correoComp = findViewById(R.id.correoComp);
         TextView passwordComp = findViewById(R.id.passwordComp);
 
+        System.out.println("Hello world!");
+        System.out.println(data[0]);
+        System.out.println(data[1]);
+        System.out.println(data[2]);
+
         nombreComp.setText("Nombre: " + data[0]);
         correoComp.setText("Correo: " + data[1]);
         passwordComp.setText("Contraseña: " + data[2]);

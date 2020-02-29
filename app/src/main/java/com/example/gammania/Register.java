@@ -86,7 +86,7 @@ public class Register extends AppCompatActivity {
 
     }
 
-    private void setIntentData(Intent intent){
+    private String[] getIntentData(){
 
         Bundle extras = getIntent().getExtras();
         EditText[] campos = getFields();
@@ -118,20 +118,19 @@ public class Register extends AppCompatActivity {
 
         }
 
-        intent.putExtra("nombre", nombre);
-        intent.putExtra("correo", email);
-        intent.putExtra("password", password);
-        intent.putExtra("passwordConfirm", passwordConfirm);
+        String[] intentData = {nombre, email, password, passwordConfirm};
+        return intentData;
 
     }
 
     public void onClick(View view){
 
         Intent intent;
-        String nombre = "";
-        String email = "";
-        String password = "";
-        String passwordConfirm = "";
+        String[] intentData = getIntentData();
+        String nombre = intentData[0];
+        String email = intentData[1];
+        String password = intentData[2];
+        String passwordConfirm = intentData[3];
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setTitle("Gammania");
@@ -141,7 +140,10 @@ public class Register extends AppCompatActivity {
             case R.id.botonVolver:
 
                 intent = new Intent(Register.this, MainActivity.class);
-                setIntentData(intent);
+                intent.putExtra("nombre", nombre);
+                intent.putExtra("correo", email);
+                intent.putExtra("password", password);
+                intent.putExtra("passwordConfirm", passwordConfirm);
                 startActivity(intent);
                 break;
 
@@ -153,17 +155,15 @@ public class Register extends AppCompatActivity {
                 password = datos[2].trim();
                 passwordConfirm = datos[3].trim();
 
-                System.out.println(nombre);
-                System.out.println(email);
-                System.out.println(password);
-                System.out.println(passwordConfirm);
-
                 if(!(nombre.equals("") || email.equals("") || password.equals("") || passwordConfirm.equals(""))){
 
                     if(password.equals(passwordConfirm)){
 
                         intent = new Intent(Register.this, ConfirmarDatos.class);
-                        setIntentData(intent);
+                        intent.putExtra("nombre", nombre);
+                        intent.putExtra("correo", email);
+                        intent.putExtra("password", password);
+                        intent.putExtra("passwordConfirm", passwordConfirm);
                         startActivity(intent);
 
                     }else{
