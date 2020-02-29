@@ -47,8 +47,9 @@ public class ConfirmarDatos extends AppCompatActivity {
         String correo = extras != null ? extras.getString("correo") : "";
         String password = extras != null ? extras.getString("password") : "";
         String passwordConfirm = extras != null ? extras.getString("passwordConfirm") : "";
+        String terms = extras != null ? Boolean.valueOf(extras.getBoolean("terms")).toString() : "false";
 
-        String[] datos = {nombre, correo, password, passwordConfirm};
+        String[] datos = {nombre, correo, password, passwordConfirm, terms};
         return datos;
     }
 
@@ -59,6 +60,7 @@ public class ConfirmarDatos extends AppCompatActivity {
         String correo = data[1];
         String password = data[2];
         String passwordConfirm = data[3];
+        Boolean terms = Boolean.valueOf(data[4]);
 
         switch (view.getId()){
             case R.id.volverConfirmacion:
@@ -67,6 +69,7 @@ public class ConfirmarDatos extends AppCompatActivity {
                 intent.putExtra("correo", correo);
                 intent.putExtra("password", password);
                 intent.putExtra("passwordConfirm", passwordConfirm);
+                intent.putExtra("terms", terms);
                 startActivity(intent);
                 break;
 

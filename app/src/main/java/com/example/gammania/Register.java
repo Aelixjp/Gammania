@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 public class Register extends AppCompatActivity {
@@ -27,11 +28,13 @@ public class Register extends AppCompatActivity {
         EditText campoEmail = (EditText)findViewById(R.id.email);
         EditText campoPassword = (EditText)findViewById(R.id.password);
         EditText campoPasswordConfirm = (EditText)findViewById(R.id.confirmPassword);
+        CheckBox campoTerms = findViewById(R.id.conditions);
 
         String nombre = "";
         String email = "";
         String password = "";
         String passwordConfirm = "";
+        Boolean terms = false;
 
         if(extras != null){
             nombre = extras.getString("nombre") != null ? extras.getString("nombre").trim() : campoNombre.getText().toString().trim();
@@ -40,6 +43,7 @@ public class Register extends AppCompatActivity {
             passwordConfirm = extras.getString("passwordConfirm") != null ?
                     extras.getString("passwordConfirm").trim() :
                     campoPasswordConfirm.getText().toString().trim();
+            terms = extras.getBoolean("terms") ? Boolean.valueOf(extras.getBoolean("terms")) : Boolean.valueOf(campoTerms.isChecked());
         }else{
 
             nombre = campoNombre.getText().toString().trim();
@@ -53,6 +57,7 @@ public class Register extends AppCompatActivity {
         campoEmail.setText(email);
         campoPassword.setText(password);
         campoPasswordConfirm.setText(passwordConfirm);
+        campoTerms.setChecked(terms);
 
 
     }
@@ -63,12 +68,14 @@ public class Register extends AppCompatActivity {
         EditText email = (EditText)findViewById(R.id.email);
         EditText password = (EditText)findViewById(R.id.password);
         EditText passwordConfim = (EditText)findViewById(R.id.confirmPassword);
+        CheckBox terms = findViewById(R.id.conditions);
 
         String [] datos = {
                 nombre.getText().toString(),
                 email.getText().toString(),
                 password.getText().toString(),
-                passwordConfim.getText().toString()
+                passwordConfim.getText().toString(),
+                Boolean.valueOf(terms.isChecked()).toString()
         };
 
         return datos;
@@ -86,6 +93,10 @@ public class Register extends AppCompatActivity {
 
     }
 
+    private CheckBox getCheckBox(){
+        return findViewById(R.id.conditions);
+    }
+
     private String[] getIntentData(){
 
         Bundle extras = getIntent().getExtras();
@@ -94,11 +105,13 @@ public class Register extends AppCompatActivity {
         EditText emailCampo = campos[1];
         EditText passwordCampo = campos[2];
         EditText passwordConfirmCampo = campos[3];
+        CheckBox termsCampo = getCheckBox();
 
         String nombre = "";
         String email = "";
         String password = "";
         String passwordConfirm = "";
+        Boolean acceptedTerms = false;
 
         if(extras != null){
             nombre = extras.getString("nombre") != null ? extras.getString("nombre").trim() : nombreCampo.getText().toString().trim();
@@ -109,6 +122,7 @@ public class Register extends AppCompatActivity {
             passwordConfirm = extras.getString("passwordConfirm") != null ?
                     extras.getString("passwordConfirm").trim() :
                     passwordConfirmCampo.getText().toString().trim();
+            acceptedTerms = extras.getBoolean("terms") ? Boolean.valueOf(extras.getBoolean("terms")) : Boolean.valueOf(termsCampo.isChecked());
         }else{
 
             nombre = nombreCampo.getText().toString().trim();
@@ -118,7 +132,7 @@ public class Register extends AppCompatActivity {
 
         }
 
-        String[] intentData = {nombre, email, password, passwordConfirm};
+        String[] intentData = {nombre, email, password, passwordConfirm, acceptedTerms.toString()};
         return intentData;
 
     }
@@ -131,6 +145,7 @@ public class Register extends AppCompatActivity {
         String email = intentData[1];
         String password = intentData[2];
         String passwordConfirm = intentData[3];
+        Boolean terms = Boolean.valueOf(intentData[4]);
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setTitle("Gammania");
@@ -144,6 +159,7 @@ public class Register extends AppCompatActivity {
                 intent.putExtra("correo", email);
                 intent.putExtra("password", password);
                 intent.putExtra("passwordConfirm", passwordConfirm);
+                intent.putExtra("terms", terms);
                 startActivity(intent);
                 break;
 
@@ -154,17 +170,37 @@ public class Register extends AppCompatActivity {
                 email = datos[1].trim();
                 password = datos[2].trim();
                 passwordConfirm = datos[3].trim();
+                terms = Boolean.valueOf(datos[4]);
 
                 if(!(nombre.equals("") || email.equals("") || password.equals("") || passwordConfirm.equals(""))){
 
                     if(password.equals(passwordConfirm)){
 
-                        intent = new Intent(Register.this, ConfirmarDatos.class);
-                        intent.putExtra("nombre", nombre);
-                        intent.putExtra("correo", email);
-                        intent.putExtra("password", password);
-                        intent.putExtra("passwordConfirm", passwordConfirm);
-                        startActivity(intent);
+                        if(terms){
+
+                            intent = new Intent(Register.this, ConfirmarDatos.class);
+                            intent.putExtra("nombre", nombre);
+                            intent.putExtra("correo", email);
+                            intent.putExtra("password", password);
+                            intent.putExtra("passwordConfirm", passwordConfirm);
+                            intent.putExtra("terms", terms);
+                            startActivity(intent);
+
+                        }else{
+
+                            dialogBuilder.setMessage("¡Debes aceptar los terminos y condiciones primero!");
+                            dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    dialogInterface.cancel();
+
+                                }
+                            });
+
+                            dialogBuilder.show();
+
+                        }
 
                     }else{
 

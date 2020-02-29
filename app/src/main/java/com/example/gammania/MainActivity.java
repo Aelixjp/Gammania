@@ -56,13 +56,14 @@ public class MainActivity extends AppCompatActivity {
             String email = extras.getString("correo") != null ? extras.getString("correo").trim() : "";
             String password = extras.getString("password") != null ? extras.getString("password").trim() : "";
             String passwordConfirm = extras.getString("passwordConfirm") != null ? extras.getString("passwordConfirm").trim() : "";
+            Boolean terms = extras.getBoolean("terms");
 
-            String[] datos = {nombre, email, password, passwordConfirm};
+            String[] datos = {nombre, email, password, passwordConfirm, terms.toString()};
             return datos;
 
         }else{
 
-            String[] datos = {"", "", "", ""};
+            String[] datos = {"", "", "", "", "false"};
             return datos;
 
         }
@@ -75,12 +76,14 @@ public class MainActivity extends AppCompatActivity {
         String email = data[1];
         String password = data[2];
         String passwordConfirm = data[3];
+        Boolean terms = Boolean.valueOf(data[4]);
 
         Intent intent = new Intent(MainActivity.this, Register.class);
         intent.putExtra("nombre", nombre);
         intent.putExtra("correo", email);
         intent.putExtra("password", password);
         intent.putExtra("passwordConfirm", passwordConfirm);
+        intent.putExtra("terms", terms);
         startActivity(intent);
     }
 
